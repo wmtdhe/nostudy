@@ -7,5 +7,15 @@
   <body>
     <h1><%= title %></h1>
     <p>EJS Welcome to <%= title %></p>
+    <p>Sending <%= msg %></p>
+    <p><%= locals.name %></p>
+    <hr>
+    <%- include('widgets/user-info',{
+      me
+    })%>
+    <hr>
+  <%- include('widgets/blog',{blogs})%>
+    <hr>
+  <h1><%= views %></h1>
   </body>
 </html>

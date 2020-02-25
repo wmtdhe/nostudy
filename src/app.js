@@ -1,22 +1,40 @@
-const Koa = require('koa')
-const Router = require('koa-router')
-const app = new Koa()
-const router = new Router()
+const Koa = require('koa');
+// const Router = require('koa-router')
+const app = new Koa();
 
-const views = require('koa-views')
-const co = require('co')
-const convert = require('koa-convert')
-const json = require('koa-json')
-const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
-const logger = require('koa-logger')
-const debug = require('debug')('koa2:server')
-const path = require('path')
 
-const config = require('../config')
-const routes = require('./routes')
+const views = require('koa-views');
+const co = require('co');
+const convert = require('koa-convert');
+const json = require('koa-json');
+const onerror = require('koa-onerror');
+const bodyparser = require('koa-bodyparser');
+const logger = require('koa-logger');
+const debug = require('debug')('koa2:server');
+const path = require('path');
+const router = require('./routes');
+const config = require('../config');
 
-const port = process.env.PORT || config.port
+//session configs
+const session = require('koa-generic-session');
+const redisStore = require('koa-redis');
+const redisConfig = require('./db');//host, port
+app.keys = ['lol_989']; //加密 key
+app.use(session({
+  key:'weibo.sid', //cookie's name ---default koa.sid
+  prefix: 'weibo:sess', //redis key prefix -- default koa:sess
+  cookie:{
+    path:'/', //can be accessed from all paths
+    httpOnly: true,
+    maxAge:24 * 60 * 60 * 1000
+  },
+  // ttl:24 * 60 * 60 * 1000, //redis expire time ---default to cookie's max age
+  store:redisStore({
+    all:`${redisConfig.host}:${redisConfig.port}`
+  })
+}))
+
+const port = process.env.PORT || config.port;
 
 // error handler
 onerror(app)
@@ -42,20 +60,22 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - $ms`)
 })
 
-router.get('/', async (ctx, next) => {
-  // ctx.body = 'Hello World'
-  ctx.state = {
-    title: 'Koa2'
-  }
-  await ctx.render('index', ctx.state)
-})
+// router.get('/', async (ctx, next) => {
+//   // ctx.body = 'Hello World'
+//   ctx.state = {
+//     title: 'Koa2'
+//   }
+//   await ctx.render('index', ctx.state)
+// })
 
-routes(router)
+
 app.on('error', function(err, ctx) {
   console.log(err)
   logger.error('server error', err, ctx)
 })
 
-module.exports = app.listen(config.port, () => {
-  console.log(`Listening on http://localhost:${config.port}`)
-})
+// module.exports = app.listen(config.port, () => {
+//   console.log(`Listening on http://localhost:${config.port}`)
+// })
+
+module.exports = app;
