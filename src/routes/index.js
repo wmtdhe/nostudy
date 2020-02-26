@@ -3,30 +3,33 @@
 
   router.get('/', async function (ctx, next) {
     //ctx.session --- 当前用户session
-    let session = ctx.session;
-    if(session.views===null){
-      session.views = 0;
-    }
-    session.views ++;
-    ctx.body = {
-      title:'nihao'
-    };
-    // await ctx.render('index',{
-    //   title: 'koa2 title',
-    //   msg:'hello',
-    //   me:true,
-    //   views:session.views,
-    //   blogs:[{
-    //     id:1,
-    //     title:'cod'
-    //   },{
-    //     id:2,
-    //     title:'cod'
-    //   },{
-    //     id:3,
-    //     title:'code'
-    //   }]
-    // });
+    // console.log('before');
+    // // debugger; ---breakpoint inspect
+    // console.log('after');
+    // let session = ctx.session;
+    // if(session.views===null){
+    //   session.views = 0;
+    // }
+    // session.views ++;
+    // ctx.body = {
+    //   title:'nihao'
+    // };
+    await ctx.render('index',{
+      title: 'koa2 title',
+      msg:'hello',
+      me:true,
+      // views:session.views,
+      blogs:[{
+        id:1,
+        title:'cod'
+      },{
+        id:2,
+        title:'cod'
+      },{
+        id:3,
+        title:'code'
+      }]
+    });
   });
 
   router.get('/profile/:username',async function (ctx,next) {
@@ -34,7 +37,7 @@
     ctx.body = {
       title:'profile page',
       username
-    }
+    };
   });
 
   router.post('/login',async (ctx,next)=>{
@@ -43,7 +46,7 @@
       status:200,
       username,
       password
-    }
+    };
   });
 
   module.exports=router;

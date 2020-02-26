@@ -13,31 +13,37 @@ const logger = require('koa-logger');
 const debug = require('debug')('koa2:server');
 const path = require('path');
 const router = require('./routes');
+const errorRouter = require('./routes/error');
 const config = require('../config');
 
 //session configs
 const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
-const redisConfig = require('./db');//host, port
+const redisConfig = require('./db_redis');//host, port
 app.keys = ['lol_989']; //加密 key
-app.use(session({
-  key:'weibo.sid', //cookie's name ---default koa.sid
-  prefix: 'weibo:sess', //redis key prefix -- default koa:sess
-  cookie:{
-    path:'/', //can be accessed from all paths
-    httpOnly: true,
-    maxAge:24 * 60 * 60 * 1000
-  },
-  // ttl:24 * 60 * 60 * 1000, //redis expire time ---default to cookie's max age
-  store:redisStore({
-    all:`${redisConfig.host}:${redisConfig.port}`
-  })
-}))
+// app.use(session({
+//   key:'weibo.sid', //cookie's name ---default koa.sid
+//   prefix: 'weibo:sess', //redis key prefix -- default koa:sess
+//   cookie:{
+//     path:'/', //can be accessed from all paths
+//     httpOnly: true,
+//     maxAge:24 * 60 * 60 * 1000
+//   },
+//   // ttl:24 * 60 * 60 * 1000, //redis expire time ---default to cookie's max age
+//   store:redisStore({
+//     all:`${redisConfig.host}:${redisConfig.port}`
+//   })
+// }));
 
 const port = process.env.PORT || config.port;
 
 // error handler
-onerror(app)
+let errorConfig = {
+  redirect:'/error' // server-side error -> redirect to error page
+}
+
+onerror(app, errorConfig);
+
 
 // middlewares
 app.use(bodyparser())
@@ -51,31 +57,28 @@ app.use(bodyparser())
   }))
   .use(router.routes())
   .use(router.allowedMethods())
+  .use(errorRouter.routes(),errorRouter.allowedMethods());
+
+
 
 // logger
 app.use(async (ctx, next) => {
-  const start = new Date()
-  await next()
-  const ms = new Date() - start
-  console.log(`${ctx.method} ${ctx.url} - $ms`)
-})
+  const start = new Date();
+  await next();
+  const ms = new Date() - start;
+  console.log(`${ctx.method} ${ctx.url} - $ms`);
+});
 
-// router.get('/', async (ctx, next) => {
-//   // ctx.body = 'Hello World'
-//   ctx.state = {
-//     title: 'Koa2'
-//   }
-//   await ctx.render('index', ctx.state)
+
+// app.on('error', function(err, ctx) {
+//   console.log(err);
+//   logger.error('server error', err, ctx);
 // })
-
-
-app.on('error', function(err, ctx) {
-  console.log(err)
-  logger.error('server error', err, ctx)
-})
 
 // module.exports = app.listen(config.port, () => {
 //   console.log(`Listening on http://localhost:${config.port}`)
 // })
 
-module.exports = app;
+module.exports = app.listen(3000,function () {
+  console.log('listening to 3000');
+});

@@ -8,4 +8,5 @@ let REDIS_CONFIG = {
   host:'127.0.0.1'
 };
 
+
 module.exports = REDIS_CONFIG;

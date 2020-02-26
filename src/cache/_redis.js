@@ -2,7 +2,7 @@
  * @description redis get & set
  */
 
-const config = require('../db');
+const config = require('../db_redis');
 const redis = require('redis');
 
 //create redis client
