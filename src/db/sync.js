@@ -1,5 +1,6 @@
 const seq = require('./seq');
-require('./models/model')
+
+require('./index');
 
 seq.authenticate()
   .then(res=>console.log('ok'))
@@ -10,4 +11,5 @@ seq.sync({force:true}).then(res=>{
   process.exit();
 }).catch(e=>{
   console.log('failed');
-})
+});
+

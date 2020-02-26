@@ -14,26 +14,28 @@ const debug = require('debug')('koa2:server');
 const path = require('path');
 const router = require('./routes');
 const errorRouter = require('./routes/error');
-const config = require('../config');
+const userRouter = require('./routes/user');
+const userApiRouter = require('./routes/api/userApi');
+const config = require('./config');
 
 //session configs
 const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 const redisConfig = require('./db_redis');//host, port
 app.keys = ['lol_989']; //加密 key
-// app.use(session({
-//   key:'weibo.sid', //cookie's name ---default koa.sid
-//   prefix: 'weibo:sess', //redis key prefix -- default koa:sess
-//   cookie:{
-//     path:'/', //can be accessed from all paths
-//     httpOnly: true,
-//     maxAge:24 * 60 * 60 * 1000
-//   },
-//   // ttl:24 * 60 * 60 * 1000, //redis expire time ---default to cookie's max age
-//   store:redisStore({
-//     all:`${redisConfig.host}:${redisConfig.port}`
-//   })
-// }));
+app.use(session({
+  key:'weibo.sid', //cookie's name ---default koa.sid
+  prefix: 'weibo:sess', //redis key prefix -- default koa:sess
+  cookie:{
+    path:'/', //can be accessed from all paths
+    httpOnly: true,
+    maxAge:24 * 60 * 60 * 1000
+  },
+  // ttl:24 * 60 * 60 * 1000, //redis expire time ---default to cookie's max age
+  store:redisStore({
+    all:`${redisConfig.host}:${redisConfig.port}`
+  })
+}));
 
 const port = process.env.PORT || config.port;
 
@@ -57,6 +59,8 @@ app.use(bodyparser())
   }))
   .use(router.routes())
   .use(router.allowedMethods())
+  .use(userRouter.routes(),userRouter.allowedMethods())
+  .use(userApiRouter.routes(),userApiRouter.allowedMethods())
   .use(errorRouter.routes(),errorRouter.allowedMethods());
 
 
