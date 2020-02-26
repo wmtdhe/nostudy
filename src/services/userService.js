@@ -6,6 +6,7 @@
 const {User} = require('../db/models/model');
 const {formatUser} = require('./_format');
 
+
 async function getUserInfo(username,password){
   const whereOption = {
     username,
@@ -39,4 +40,4 @@ async function createUser({userName,password,gender=3,nickName}){
 module.exports = {
   getUserInfo,
   createUser
-}
+};

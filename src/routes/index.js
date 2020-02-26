@@ -33,10 +33,17 @@
   });
 
   router.get('/profile/:username',async function (ctx,next) {
+    const views = ctx.session.views;
+    if(views!=null){
+      ctx.session.views++;
+    }else{
+      ctx.session.views=0;
+    }
     const {username} = ctx.params;
     ctx.body = {
       title:'profile page',
-      username
+      username,
+      views:ctx.session.views
     };
   });
 

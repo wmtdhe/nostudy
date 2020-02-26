@@ -22,7 +22,7 @@ const config = require('./config');
 const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 const redisConfig = require('./db_redis');//host, port
-app.keys = ['lol_989']; //加密 key
+app.keys = ['lol_989']; //加密 key session用
 app.use(session({
   key:'weibo.sid', //cookie's name ---default koa.sid
   prefix: 'weibo:sess', //redis key prefix -- default koa:sess

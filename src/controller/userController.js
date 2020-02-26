@@ -21,7 +21,7 @@ async function isExist(username) {
 }
 
 /**
- *
+ * @description handle register
  * @param userName
  * @param password
  * @param gender
@@ -49,7 +49,23 @@ async function register({userName,password,gender}){
   }
 }
 
+async function login(ctx,userName,password){
+  //登录成功info放入session 操作db --》 async
+  let userInfo = await getUserInfo(userName,doCrypto(password));
+  if(userInfo){
+    //success 200
+    ctx.session.userInfo = userInfo;
+    return new SuccessModel({});
+  }else{
+    return new ErrorModel({
+      errno:403,
+      message:'密码错误'
+    });
+  }
+}
+
 module.exports = {
   isExist,
   register,
+  login
 };
