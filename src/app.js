@@ -42,8 +42,7 @@ const port = process.env.PORT || config.port;
 // error handler
 let errorConfig = {
   redirect:'/error' // server-side error -> redirect to error page
-}
-
+};
 onerror(app, errorConfig);
 
 
@@ -80,9 +79,9 @@ app.use(async (ctx, next) => {
 // })
 
 // module.exports = app.listen(config.port, () => {
-//   console.log(`Listening on http://localhost:${config.port}`)
+//   console.log(`Listening on http://localhost:${config.port}`);
 // })
 
-module.exports = app.listen(3000,function () {
-  console.log('listening to 3000');
-});
+module.exports = app;
+
+

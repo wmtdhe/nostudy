@@ -4,7 +4,7 @@
  */
 const crypto = require('crypto');
 
-const SECRET = 'sdwS23_s';
+const SECRET = 'sdwS23_s'; //---组合加密用户密码
 
 
 function _md5(content){

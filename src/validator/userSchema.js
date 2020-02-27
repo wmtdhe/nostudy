@@ -5,7 +5,7 @@ const userSchema = {
   properties:{
     userName:{
       type:'string',
-      pattern:'^[a-zA-z][a-zA-z0-9]+$', //字母开头
+      pattern:'^[a-zA-z][a-zA-z0-9_]+$', //字母开头
       minLength:6,
       maxLength:16
     },

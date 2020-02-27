@@ -1,19 +1,8 @@
   const Router = require('koa-router');
   const router = new Router();
 
-  router.get('/', async function (ctx, next) {
-    //ctx.session --- 当前用户session
-    // console.log('before');
-    // // debugger; ---breakpoint inspect
-    // console.log('after');
-    // let session = ctx.session;
-    // if(session.views===null){
-    //   session.views = 0;
-    // }
-    // session.views ++;
-    // ctx.body = {
-    //   title:'nihao'
-    // };
+  const {loginRedirect, loginCheck} = require('../middlewares/loginCheck');
+  router.get('/', loginRedirect,async function (ctx, next) {
     await ctx.render('index',{
       title: 'koa2 title',
       msg:'hello',
@@ -32,7 +21,7 @@
     });
   });
 
-  router.get('/profile/:username',async function (ctx,next) {
+  router.get('/profile/:username',loginCheck,async function (ctx,next) {
     const views = ctx.session.views;
     if(views!=null){
       ctx.session.views++;

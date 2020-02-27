@@ -5,9 +5,17 @@
 const Router = require('koa-router');
 const router = new Router();
 router.get('/login',async (ctx,next)=>{
-  await ctx.render('login',{
+  if(ctx.session.userInfo){
+    let {isLogin, userName} = ctx.session.userInfo;
+    await ctx.render('login',{
+      isLogin,
+      userName
+    });
+  }else{
+    await ctx.render('login',{
+    });
+  }
 
-  });
 });
 
 router.get('/register',async (ctx,next)=>{

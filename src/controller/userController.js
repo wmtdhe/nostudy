@@ -54,7 +54,7 @@ async function login(ctx,userName,password){
   let userInfo = await getUserInfo(userName,doCrypto(password));
   if(userInfo){
     //success 200
-    ctx.session.userInfo = userInfo;
+    ctx.session.userInfo = Object.assign(userInfo,{isLogin:true});
     return new SuccessModel({});
   }else{
     return new ErrorModel({
