@@ -78,10 +78,10 @@ app.use(async (ctx, next) => {
 //   logger.error('server error', err, ctx);
 // })
 
-// module.exports = app.listen(config.port, () => {
-//   console.log(`Listening on http://localhost:${config.port}`);
-// })
+module.exports = app.listen(config.port, () => {
+  console.log(`Listening on http://localhost:${config.port}`);
+});
 
-module.exports = app;
+// module.exports = app;
 
 
