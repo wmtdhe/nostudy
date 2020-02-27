@@ -15,6 +15,7 @@ const path = require('path');
 const router = require('./routes');
 const errorRouter = require('./routes/error');
 const userRouter = require('./routes/user');
+const utilRouter = require('./routes/api/utilApi');
 const userApiRouter = require('./routes/api/userApi');
 const config = require('./config');
 
@@ -51,6 +52,7 @@ app.use(bodyparser())
   .use(json())
   .use(logger())
   .use(require('koa-static')(__dirname + '/public'))
+  .use(require('koa-static')(path.join(__dirname,'..','uploadFiles')))
   .use(views(path.join(__dirname, '/views'), {
     options: {settings: {views: path.join(__dirname, 'views')}},
     map: {'ejs': 'ejs'},
@@ -60,6 +62,7 @@ app.use(bodyparser())
   .use(router.allowedMethods())
   .use(userRouter.routes(),userRouter.allowedMethods())
   .use(userApiRouter.routes(),userApiRouter.allowedMethods())
+  .use(utilRouter.routes(),utilRouter.allowedMethods())
   .use(errorRouter.routes(),errorRouter.allowedMethods());
 
 

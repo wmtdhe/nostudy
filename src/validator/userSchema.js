@@ -23,6 +23,11 @@ const userSchema = {
       type:'number',
       minimum:1,
       maximum:3
+    },
+    newPassword:{
+      type:'string',
+      minLength:8,
+      maxLength:18
     }
   }
 };

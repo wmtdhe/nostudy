@@ -5,6 +5,7 @@
 
 const {User} = require('../db/models/model');
 const {formatUser} = require('./_format');
+const doCrypto = require('../utils/encrypt');
 
 
 async function getUserInfo(username,password){
@@ -37,7 +38,55 @@ async function createUser({userName,password,gender=3,nickName}){
   return result.dataValues;
 }
 
+
+async function updateUser({nickName,city,picture,userName,password,newPassword}){
+  let updateData = {};
+  if(nickName){
+    updateData.nickname = nickName;
+  }
+  if(city){
+    updateData.city = city;
+  }
+  if(picture){
+    updateData.picture = picture;
+  }
+  if(password && newPassword){
+    let result = await User.findOne({
+      where:{
+        userName:userName,
+        password:doCrypto(password)
+      }
+    });
+    if(result){
+      updateData.password = doCrypto(newPassword);
+    }else{
+      return 0;
+    }
+  }
+  try{
+    let result =await User.update(updateData,
+      {
+        where:{
+          userName:userName
+        }
+      });
+    if(result){
+      let newInfo = await User.findOne({
+        attributes:['id','userName','gender','nickname','city','picture'],
+        where:{
+          userName:userName
+        }
+      });
+      return newInfo.dataValues;
+    }
+    return null;
+  }catch (e) {
+    return null; //fail update
+  }
+}
+
 module.exports = {
   getUserInfo,
-  createUser
+  createUser,
+  updateUser
 };

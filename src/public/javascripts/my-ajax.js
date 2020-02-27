@@ -37,7 +37,7 @@
   // 上传文件
   window.ajax.upload = function (url, file, callback) {
     var formData = new FormData()
-    formData.append('file', file)
+    formData.append('file', file)// .file
     $.ajax({
       type: 'POST',
       url,

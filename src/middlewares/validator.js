@@ -9,6 +9,7 @@ function genValidator(validatorFn) {
     let error = validatorFn(data);
     if(!error){
       await next();
+      return;
     }else{
       ctx.body = new ErrorModel({
         errno:503,
