@@ -19,6 +19,7 @@ const utilRouter = require('./routes/api/utilApi');
 const blogApiRouter = require('./routes/api/blogApi');
 const userApiRouter = require('./routes/api/userApi');
 const profileRouter = require('./routes/profile');
+const profileApiRouter = require('./routes/api/profileApi');
 const config = require('./config');
 
 //session configs
@@ -67,6 +68,7 @@ app.use(bodyparser())
   .use(userApiRouter.routes(),userApiRouter.allowedMethods())
   .use(blogApiRouter.routes(),blogApiRouter.allowedMethods())
   .use(utilRouter.routes(),utilRouter.allowedMethods())
+  .use(profileApiRouter.routes(),profileApiRouter.allowedMethods())
   .use(errorRouter.routes(),errorRouter.allowedMethods());
 
 

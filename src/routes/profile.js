@@ -24,6 +24,7 @@ router.get('/profile/:userName',async (ctx,next)=>{
       }
   }
   let ret = await getProfileBlog({userName});
+  console.log(ret.data);
   await ctx.render('profile',{
     blogData:ret.data, //
     userData:{

@@ -13,7 +13,7 @@ async function getProfileBlog({userName,pageIndex = 0}) {
       blogList:result.blogList,
       count:result.count,
       isEmpty:result.blogList==0?true:false,
-      pageIndex,
+      pageIndex:pageIndex,
       pageSize:5
     })
   }else{

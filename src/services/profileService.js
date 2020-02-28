@@ -28,7 +28,6 @@ async function getBlogs({userName,pageIndex=0,pageSize=5}) {
     //result.count -- total count of rows
     //result.rows -- array
     let blogList = result.rows.map(v=>v.dataValues);
-    console.log(blogList)
     blogList = formatBlog(blogList);
     blogList.map(v=>{
       let user = v.user.dataValues;
