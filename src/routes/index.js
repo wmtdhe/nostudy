@@ -2,22 +2,9 @@
   const router = new Router();
 
   const {loginRedirect, loginCheck} = require('../middlewares/loginCheck');
+
   router.get('/', loginRedirect,async function (ctx, next) {
     await ctx.render('index',{
-      title: 'koa2 title',
-      msg:'hello',
-      me:true,
-      // views:session.views,
-      blogs:[{
-        id:1,
-        title:'cod'
-      },{
-        id:2,
-        title:'cod'
-      },{
-        id:3,
-        title:'code'
-      }]
     });
   });
 
@@ -36,14 +23,6 @@
     };
   });
 
-  router.post('/login',async (ctx,next)=>{
-    let {username,password} = ctx.request.body;
-    ctx.body = {
-      status:200,
-      username,
-      password
-    };
-  });
 
   module.exports=router;
 

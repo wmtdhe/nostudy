@@ -16,6 +16,7 @@ const router = require('./routes');
 const errorRouter = require('./routes/error');
 const userRouter = require('./routes/user');
 const utilRouter = require('./routes/api/utilApi');
+const blogApiRouter = require('./routes/api/blogApi');
 const userApiRouter = require('./routes/api/userApi');
 const config = require('./config');
 
@@ -62,6 +63,7 @@ app.use(bodyparser())
   .use(router.allowedMethods())
   .use(userRouter.routes(),userRouter.allowedMethods())
   .use(userApiRouter.routes(),userApiRouter.allowedMethods())
+  .use(blogApiRouter.routes(),blogApiRouter.allowedMethods())
   .use(utilRouter.routes(),utilRouter.allowedMethods())
   .use(errorRouter.routes(),errorRouter.allowedMethods());
 

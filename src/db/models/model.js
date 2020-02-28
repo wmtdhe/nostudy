@@ -34,30 +34,31 @@ const User = seq.define('user',{
 });
 
 //blogs
-// const Blog = seq.define('blog',{
-//   title:{
-//     type:Sequelize.STRING,
-//     allowNull:false
-//   },
-//   content:{
-//     type:Sequelize.TEXT,
-//     allowNull:false
-//   },
-//   userId:{
-//     type:Sequelize.INTEGER,
-//     allowNull:false
-//   }
-// })
+const Blog = seq.define('blog',{
+  content:{
+    type:TEXT,
+    allowNull:false
+  },
+  userId:{
+    type:INTEGER,
+    allowNull:false,
+    comment:'foreign key - user'
+  },
+  image:{
+    type:STRING,
+  }
+});
 //关联外键
 //method 1
-// Blog.belongsTo(User,{
-//   //blog.userId -> user.id
-//   foreignKey:'userId'
-// });
+Blog.belongsTo(User,{
+  //blog.userId -> user.id
+  foreignKey:'userId'
+});
 // //method 2
 // User.hasMany(Blog,{
 //   foreignKey:'userId'
 // });
 module.exports = {
   User,
-}
+  Blog
+};
