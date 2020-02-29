@@ -1,4 +1,4 @@
-const {Blog, User} = require('../db/models/model');
+const {Blog, User, UserRelation} = require('../db/models/model');
 const {formatUser,formatBlog} = require('./_format');
 /**
  *
@@ -33,7 +33,7 @@ async function getBlogs({userName,pageIndex=0,pageSize=5}) {
       let user = v.user.dataValues;
       v.user = formatUser(user);
       return v;
-    })
+    });
 
     return {
       count:result.count,
@@ -46,6 +46,88 @@ async function getBlogs({userName,pageIndex=0,pageSize=5}) {
 
 }
 
+async function getFansInfo(userId){
+  let whereOptions = {
+    userId
+  };
+  let result = await UserRelation.findAndCountAll({
+    where:whereOptions,
+    include:[{
+      model:User,
+      attributes:['id','userName','nickName','picture'],
+    }]
+  });
+  if(result){
+
+    let ret = result.rows.map(v=>v.dataValues);
+    ret.forEach(v=>{
+      let follower = v.user.dataValues;
+      v.user = formatUser(follower);
+    })
+    return {
+      count:result.count,
+      list:ret
+    };
+  }else{
+    return null;
+  }
+}
+
+async function getFollowingInfo(userId){
+  let whereOption = {
+    followerId: userId
+  };
+  let result = await User.findAndCountAll({
+    attributes:['id','userName','nickname','picture'],
+    order:[['id','desc']],
+    include:[{
+      model:UserRelation,
+      where:whereOption
+    }]
+  });
+
+  if(result){
+    let ret = result.rows.map(v=>formatUser(v.dataValues));
+    console.log('im following ',ret);
+    return {
+      count:result.count,
+      list:ret
+    }
+  }else{
+    return null;
+  }
+}
+
+async function followUser(userId,followerId){
+  let result = await UserRelation.create({
+    userId,
+    followerId
+  });
+  if(result){
+    return result;
+  }else{
+    return null;
+  }
+}
+
+async function unfollowUser(userId,followerId){
+  let result = await UserRelation.destroy({
+    where:{
+      userId,
+      followerId
+    }
+  });
+  if(result){
+    return result;
+  }else{
+    return null;
+  }
+}
+
 module.exports = {
   getBlogs,
+  getFansInfo,
+  getFollowingInfo,
+  followUser,
+  unfollowUser
 }

@@ -31,6 +31,8 @@ async function loginRedirect(ctx,next) {
   }else{
     //未登录时
     const curUrl = ctx.url; //记录未登录时浏览的链接---登录后跳转
+    console.log(curUrl)
+    console.log(ctx.query,'----',ctx.href,'---',ctx.path)
     ctx.redirect('/login?url='+encodeURIComponent(curUrl));
   }
 }

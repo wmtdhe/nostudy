@@ -1,5 +1,7 @@
 const {SuccessModel, ErrorModel} = require('../model/ResModel');
 const {createBlog} = require('../services/blogService');
+const {getBlogs} = require('../services/profileService');
+const {getSquareCachedBlog} = require('../cache/blog');
 /**
  * @description blog controllers
  */
@@ -24,6 +26,26 @@ async function create({content,image,userId}) {
   }
 }
 
+async function getSquareBlog({pageIndex}){
+  //cache square blogs
+  let result = await getSquareCachedBlog({pageIndex})
+  if(result){
+    return new SuccessModel({
+      blogList:result.blogList,
+      count:result.count,
+      isEmpty:result.blogList==0?true:false,
+      pageIndex:pageIndex,
+      pageSize:5
+    })
+  }else{
+    return new ErrorModel({
+      errno:1004,
+      message:'blogs not found'
+    })
+  }
+}
+
 module.exports = {
-  create
+  create,
+  getSquareBlog
 }

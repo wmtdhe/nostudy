@@ -17,14 +17,14 @@ redisClient.on('error',function (err) {
  * @description redis set
  * @param {string} key
  * @param {string} value
- * @param {number} timeout
+ * @param {number} timeout unit - second
  */
-function set(key,value,timeout=60*60) {
+function set(key,value,timeout=60) {
   if(typeof value === 'object'){
     value = JSON.stringify(value);
   }
   redisClient.set(key,value);
-  redisClient.expire(key,timeout);
+  redisClient.expire(key,timeout); //expire time of a cached data
 }
 //get
 
@@ -48,4 +48,9 @@ function get(key) {
     })
   });
   return p;
+}
+
+module.exports = {
+  get,
+  set
 }

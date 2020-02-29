@@ -58,7 +58,30 @@ Blog.belongsTo(User,{
 // User.hasMany(Blog,{
 //   foreignKey:'userId'
 // });
+
+const UserRelation = seq.define('userRelation',{ //definition will be lowercase and plural
+  userId:{
+    type:INTEGER,
+    allowNull:false,
+    comment:''
+  },
+  followerId:{
+    type:INTEGER,
+    allowNull:false,
+    comment:'followers id'
+  }
+});
+
+UserRelation.belongsTo(User,{
+  foreignKey:'followerId'
+});
+
+User.hasMany(UserRelation,{
+  foreignKey:'userId'
+});
+
 module.exports = {
   User,
-  Blog
+  Blog,
+  UserRelation
 };

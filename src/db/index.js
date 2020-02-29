@@ -1,9 +1,11 @@
 /**
  * @description db index
  */
-const { User } = require('./models/model');
+const { User, Blog, UserRelation } = require('./models/model');
 
 module.exports = {
-  User
+  User,
+  Blog,
+  UserRelation
 };
 
