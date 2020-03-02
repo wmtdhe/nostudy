@@ -3,9 +3,10 @@
  * 数据处理 格式化
  */
 
-const {User} = require('../db/models/model');
+const {User,UserRelation} = require('../db/models/model');
 const {formatUser} = require('./_format');
 const doCrypto = require('../utils/encrypt');
+const {followUser} = require('./profileService');
 
 
 async function getUserInfo(username,password){
@@ -35,6 +36,9 @@ async function createUser({userName,password,gender=3,nickName}){
     nickname:nickName?nickName:userName,
     gender,
   });
+  //自己关注自己 ---- 方便查询自己界面的所有blog
+  let userId = result.dataValues.id;
+  await followUser(userId,userId);
   return result.dataValues;
 }
 

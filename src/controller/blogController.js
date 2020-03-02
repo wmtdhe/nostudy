@@ -45,7 +45,28 @@ async function getSquareBlog({pageIndex}){
   }
 }
 
+async function getHomepageBlog({userName,pageIndex,userId}){
+  try{
+    let result = await getBlogs({userName,pageIndex,userId}); //get all followers'(including self's)
+    if(result){
+      return new SuccessModel(result)
+    }else{
+      return new ErrorModel({
+        errno:1009,
+        message:'failed to retrieve blog'
+      })
+    }
+  }catch (e) {
+    return new ErrorModel({
+      errno:1009,
+      message:'failed to retrieve blog'
+    })
+  }
+
+}
+
 module.exports = {
   create,
-  getSquareBlog
+  getSquareBlog,
+  getHomepageBlog
 }

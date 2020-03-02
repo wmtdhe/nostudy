@@ -7,6 +7,7 @@ const {isExist,register,login, updateInfo,logout} = require('../../controller/us
 const {userValidator} = require('../../validator/validate');
 const {genValidator} = require('../../middlewares/validator');
 const {loginCheck} = require('../../middlewares/loginCheck');
+const {getFollowing} = require('../../controller/profileController');
 
 router.prefix('/api/user');
 
@@ -47,4 +48,21 @@ router.patch('/changePassword',
 router.post('/logout',loginCheck,async(ctx,next)=>{
   ctx.body = await logout(ctx);
 } );
+
+/**
+ * @description get at list, following users
+ */
+router.get('/getAtList',loginCheck,async (ctx,next)=>{
+  let {id} = ctx.session.userInfo;
+  let result = await getFollowing(id);
+  if(result.errno==0){
+    let list = result.data.list.map(following=>{
+      return `${following.nickname} - ${following.userName}`
+    })
+    ctx.body = list;
+  }else{
+    ctx.body = result;
+  }
+
+});
 module.exports = router;

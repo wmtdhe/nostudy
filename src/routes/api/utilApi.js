@@ -10,6 +10,7 @@ const {SuccessModel, ErrorModel} = require('../../model/ResModel');
  */
 router.prefix( '/api/utils');
 
+//fileParse -- get file's info such as size, path, name and then attach it to ctx.request.file
 router.post('/upload',loginCheck,fileParser,async (ctx,next)=>{
   ctx.body = await saveFile(ctx.request.file);
 });
