@@ -26,6 +26,8 @@ router.get('/register',async (ctx,next)=>{
 
 router.get('/setting',loginRedirect,async (ctx,next)=>{
   let {userName,nickname,gender,city,picture} = ctx.session.userInfo;
+  ctx.cookies.set('user',userName,{httpOnly:false});
+  ctx.cookies.set('nick',nickname,{httpOnly:false});
   await ctx.render('setting',{
     userName,
     nickname,
@@ -33,6 +35,6 @@ router.get('/setting',loginRedirect,async (ctx,next)=>{
     city,
     picture
   });
-})
+});
 
 module.exports = router;

@@ -16,12 +16,16 @@ router.post('/create', loginCheck,genValidator(blogValidator),async (ctx,next)=>
   ctx.body = await create({content:xss(content),image,userId});
 });
 
-router.get('/loadMore/:pageIndex',loginCheck,async (ctx,next)=>{
+router.get('/loadMore/:pageIndex/:createdOffset',loginCheck,async (ctx,next)=>{
   let {userName, id} = ctx.session.userInfo;
-  let {pageIndex} = ctx.params;
-  let result = await getHomepageBlog({userName,pageIndex:parseInt(pageIndex),userId:id});
-  result.data.blogListTpl = loadMoreBlog(result.data.blogList);
-  result.data.pageIndex = pageIndex;
+  let {pageIndex,createdOffset} = ctx.params;
+  let result = await getHomepageBlog({userName,pageIndex:parseInt(pageIndex),userId:id,createdOffset:parseInt(createdOffset)});
+  console.log(result);
+  if(result.data){
+    result.data.blogListTpl = loadMoreBlog(result.data.blogList);
+    result.data.pageIndex = pageIndex;
+  }
+
   ctx.body = result;
 });
 module.exports = router;

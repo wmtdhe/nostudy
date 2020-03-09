@@ -10,9 +10,9 @@ router.get('/error',async (ctx,next)=>{
 
 //while other links not found
 router.get('*',async (ctx,next)=>{
-  await ctx.render('error',{
+  await ctx.render('notFound',{
     message:'404'
   });
-})
+});
 
 module.exports = router;

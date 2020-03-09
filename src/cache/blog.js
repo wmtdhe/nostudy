@@ -10,9 +10,9 @@ async function getSquareCachedBlog({pageIndex,pageSize=5}) {
   const key = `${KEY_PREFIX}_${pageIndex}_${pageSize}`; //redis key, cache every page
 
   const cacheResult = await get(key);
-  if(cacheResult){
+  if(cacheResult){ //from redis
     return cacheResult;
-  }else{
+  }else{ //from db
     //no cache or expired
     let result = await getBlogs({pageIndex});
     set(key,result,10); //cache old data for 10s
@@ -22,4 +22,4 @@ async function getSquareCachedBlog({pageIndex,pageSize=5}) {
 
 module.exports = {
   getSquareCachedBlog
-}
+};

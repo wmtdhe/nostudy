@@ -3,10 +3,10 @@
  * 数据处理 格式化
  */
 
-const {User,UserRelation} = require('../db/models/model');
+const {User,UserRelation,Blog,AtRelation} = require('../db/models/model');
 const {formatUser} = require('./_format');
 const doCrypto = require('../utils/encrypt');
-const {followUser} = require('./profileService');
+const {followUser,getFollowingInfo,getFansInfo,getBlogs} = require('./profileService');
 
 
 async function getUserInfo(username,password){
@@ -43,10 +43,10 @@ async function createUser({userName,password,gender=3,nickName}){
 }
 
 
-async function updateUser({nickName,city,picture,userName,password,newPassword}){
+async function updateUser({nickname,city,picture,userName,password,newPassword}){
   let updateData = {};
-  if(nickName){
-    updateData.nickname = nickName;
+  if(nickname){
+    updateData.nickname = nickname;
   }
   if(city){
     updateData.city = city;
@@ -64,7 +64,7 @@ async function updateUser({nickName,city,picture,userName,password,newPassword})
     if(result){
       updateData.password = doCrypto(newPassword);
     }else{
-      return 0;
+      return 0; //
     }
   }
   try{
@@ -89,8 +89,27 @@ async function updateUser({nickName,city,picture,userName,password,newPassword})
   }
 }
 
+async function retrieveHomeInfo({userName,id}){
+  try{
+    let fans = await getFansInfo(id);
+    let following = await getFollowingInfo(id);
+    let blog = await getBlogs({userName,userId:id});
+    let user = await getUserInfo(userName);
+    return {
+      fans,
+      following,
+      blog,
+      user
+    }
+  }catch (e) {
+    return null;
+  }
+
+}
+
 module.exports = {
   getUserInfo,
   createUser,
-  updateUser
+  updateUser,
+  retrieveHomeInfo
 };

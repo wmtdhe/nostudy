@@ -61,6 +61,23 @@ const UserRelation = seq.define('userRelation',{ //definition will be lowercase 
     comment:'followers id'
   }
 });
+
+const AtRelation = seq.define('atRelation',{
+  userId:{
+    type:INTEGER,
+    allowNull:false,
+  },
+  blogId:{
+    type:INTEGER,
+    allowNull:false
+  },
+  isRead:{
+    type:Sequelize.TINYINT,
+    allowNull:false,
+    defaultValue:false,
+    comment:'0 - not read, 1 - read'
+  }
+});
 //关联外键
 //method 1
 Blog.belongsTo(User,{
@@ -87,8 +104,13 @@ User.hasMany(UserRelation,{
   foreignKey:'userId'
 });
 
+Blog.hasMany(AtRelation,{
+  foreignKey:'blogId'
+});
+
 module.exports = {
   User,
   Blog,
-  UserRelation
+  UserRelation,
+  AtRelation
 };

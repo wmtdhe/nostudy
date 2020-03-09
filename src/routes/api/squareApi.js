@@ -5,9 +5,9 @@ const {loadMoreBlog} = require('../../utils/loadMore-blog-render');
 
 router.prefix('/api/square');
 
-router.get('/loadMore/:pageIndex',async (ctx,next)=>{
-  let {pageIndex} = ctx.params;
-  let result = await getSquareBlog({pageIndex:parseInt(pageIndex)});
+router.get('/loadMore/:pageIndex/:createdOffset',async (ctx,next)=>{
+  let {pageIndex,createdOffset} = ctx.params;
+  let result = await getSquareBlog({pageIndex:parseInt(pageIndex),createdOffset:parseInt(createdOffset)});
   result.data.blogListTpl = loadMoreBlog(result.data.blogList);
   ctx.body = result;
 });

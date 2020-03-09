@@ -5,6 +5,7 @@ const app = new Koa();
 
 const views = require('koa-views');
 const co = require('co');
+const cors = require('@koa/cors');
 const convert = require('koa-convert');
 const json = require('koa-json');
 const onerror = require('koa-onerror');
@@ -21,12 +22,16 @@ const userApiRouter = require('./routes/api/userApi');
 const profileRouter = require('./routes/profile');
 const profileApiRouter = require('./routes/api/profileApi');
 const squareApiRouter = require('./routes/api/squareApi');
+const atMeApiRouter = require('./routes/api/atMeApi');
 const config = require('./config');
+
 
 //session configs
 const session = require('koa-generic-session');
 const redisStore = require('koa-redis');
 const redisConfig = require('./db_redis');//host, port
+const koaStatic = require('koa-static');
+
 app.keys = ['lol_989']; //加密 key session用
 app.use(session({
   key:'weibo.sid', //cookie's name ---default koa.sid
@@ -50,16 +55,24 @@ let errorConfig = {
 };
 onerror(app, errorConfig);
 
+//
 
 // middlewares
 app.use(bodyparser())
   .use(json())
+  .use(cors({
+    origin:'http://localhost:8080',
+    credentials:true //
+  }))
   .use(logger())
-  .use(require('koa-static')(__dirname + '/public'))
-  .use(require('koa-static')(path.join(__dirname,'..','uploadFiles')))
+  .use(koaStatic(__dirname + '/public'))
+  .use(koaStatic(path.join(__dirname,'..','uploadFiles')))
+  .use(koaStatic(__dirname + '/public'+'/javascripts'))
   .use(views(path.join(__dirname, '/views'), {
     options: {settings: {views: path.join(__dirname, 'views')}},
-    map: {'ejs': 'ejs'},
+    map: {
+      'ejs': 'ejs',
+    },
     extension: 'ejs'
   }))
   .use(router.routes())
@@ -71,6 +84,7 @@ app.use(bodyparser())
   .use(utilRouter.routes(),utilRouter.allowedMethods())
   .use(profileApiRouter.routes(),profileApiRouter.allowedMethods())
   .use(squareApiRouter.routes(),squareApiRouter.allowedMethods())
+  .use(atMeApiRouter.routes(),atMeApiRouter.allowedMethods())
   .use(errorRouter.routes(),errorRouter.allowedMethods());
 
 

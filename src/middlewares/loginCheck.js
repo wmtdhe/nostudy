@@ -40,6 +40,6 @@ async function loginRedirect(ctx,next) {
 module.exports = {
   loginCheck,
   loginRedirect
-}
+};
 
 

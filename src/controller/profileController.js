@@ -7,7 +7,7 @@ const {getBlogs, getFansInfo, followUser, unfollowUser, getFollowingInfo } = req
  * @returns {Promise<void>}
  */
 async function getProfileBlog({userName,pageIndex = 0}) {
-  let result = await getBlogs({userName,pageIndex})
+  let result = await getBlogs({userName,pageIndex});
   if(result){
     return new SuccessModel({
       blogList:result.blogList,
@@ -66,6 +66,7 @@ async function follow(userId,followerId){
 }
 
 async function unfollow(userId,followerId){
+  console.log(userId,followerId);
   try{
     let result = await unfollowUser(userId,followerId);
     return new SuccessModel({});

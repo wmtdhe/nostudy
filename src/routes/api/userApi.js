@@ -3,11 +3,12 @@
  */
 const Router = require('koa-router');
 const router = new Router();
-const {isExist,register,login, updateInfo,logout} = require('../../controller/userController');
+const {isExist,register,login, updateInfo,logout,getHomeInfo} = require('../../controller/userController');
 const {userValidator} = require('../../validator/validate');
 const {genValidator} = require('../../middlewares/validator');
 const {loginCheck} = require('../../middlewares/loginCheck');
 const {getFollowing} = require('../../controller/profileController');
+const {SuccessModel} = require('../../model/ResModel');
 
 router.prefix('/api/user');
 
@@ -31,9 +32,10 @@ router.patch('/changeInfo',
   loginCheck,
   genValidator(userValidator),
   async(ctx,next)=>{
-    let {nickName, city, picture} = ctx.request.body;
+    let {nickname, city, picture} = ctx.request.body;
+    console.log('----------------',nickname);
     const {userName} = ctx.session.userInfo;
-    ctx.body = await updateInfo(ctx,{nickName,city,picture,userName});
+    ctx.body = await updateInfo(ctx,{nickname,city,picture,userName});
 } );
 
 router.patch('/changePassword',
@@ -46,6 +48,7 @@ router.patch('/changePassword',
   });
 
 router.post('/logout',loginCheck,async(ctx,next)=>{
+
   ctx.body = await logout(ctx);
 } );
 
@@ -57,12 +60,21 @@ router.get('/getAtList',loginCheck,async (ctx,next)=>{
   let result = await getFollowing(id);
   if(result.errno==0){
     let list = result.data.list.map(following=>{
-      return `${following.nickname} - ${following.userName}`
-    })
-    ctx.body = list;
+      return `${following.userName} - ${following.nickname}`
+    });
+
+    ctx.body = new SuccessModel(list)
   }else{
     ctx.body = result;
   }
 
 });
+
+
+router.get('/homeInfo',loginCheck,async (ctx,next)=>{
+    let {userName,id} = ctx.session.userInfo;
+    ctx.body = await getHomeInfo({userName,id});
+});
+
+
 module.exports = router;

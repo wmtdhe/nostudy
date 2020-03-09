@@ -8,7 +8,7 @@ const Sequelize = require('sequelize');
  * @param pageSize default to 10
  * @returns {Promise<void>}
  */
-async function getBlogs({userName,pageIndex=0,pageSize=5,userId}) {
+async function getBlogs({userName,pageIndex=0,pageSize=5,userId,createdOffset = 0}) {
   let options = {};
   let result;
   if(userName){
@@ -17,7 +17,7 @@ async function getBlogs({userName,pageIndex=0,pageSize=5,userId}) {
   if(userId){
     result = await Blog.findAndCountAll({
       limit:pageSize,
-      offset:pageSize*pageIndex,
+      offset:pageSize*pageIndex+createdOffset,
       order:[['id','desc']],
       include:[{
         model:User,
@@ -26,14 +26,15 @@ async function getBlogs({userName,pageIndex=0,pageSize=5,userId}) {
         model:UserRelation,
         attributes:['userId','followerId'], //查出userId会找对应的blog userId
         where:{
-          followerId:userId
+          followerId:userId //find all following blog -- include self's
         }
       }]
     });
+
   }else{
     result = await Blog.findAndCountAll({
       limit:pageSize,
-      offset:pageSize*pageIndex,
+      offset:pageSize*pageIndex+createdOffset,
       order:[['id','desc']],
       include:[
         {
@@ -49,8 +50,9 @@ async function getBlogs({userName,pageIndex=0,pageSize=5,userId}) {
     //result.rows -- array
     let count =result.count;
     let blogList = result.rows.map(v=>v.dataValues);
+    // console.log(result.rows)
     blogList = formatBlog(blogList);
-    console.log(blogList);
+    // console.log(blogList)
     blogList.map(v=>{
       let user = v.user.dataValues;
       v.user = formatUser(user);

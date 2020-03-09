@@ -75,4 +75,4 @@ function _formatAt(obj){
 module.exports = {
   formatUser,
   formatBlog
-}
+};

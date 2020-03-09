@@ -11,6 +11,7 @@ function genValidator(validatorFn) {
       await next();
       return;
     }else{
+      console.log(error);
       ctx.body = new ErrorModel({
         errno:503,
         message:'failed validating'

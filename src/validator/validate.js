@@ -6,6 +6,8 @@ const {userSchema} = require('./userSchema');
 const {blogSchema} = require('./blogSchema');
 
 function userValidator(data){
+
+
   let valid = ajv.validate(userSchema,data);
   if(!valid){
     return ajv.errors;

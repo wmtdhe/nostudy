@@ -10,7 +10,7 @@ async function fileParser(ctx,next) {
       }else{
         // console.log(fileds);
         console.log(files);
-        files = files.file; //file in ajax
+        files = files.file; //file in ajax -----> formData.append('file',file)
         let file = {
           name:files.name,
           size:files.size,
